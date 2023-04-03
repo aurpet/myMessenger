@@ -1,17 +1,19 @@
 package com.mymessenger.services;
 
+import com.mymessenger.dto.UserDto;
 import com.mymessenger.model.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * @author Aurimas
  * @created 2023-04-03
  */
 
-public interface UserService extends UserDetailsService {
+public interface UserService {
     User save(User user);
     boolean userExist(String userName);
-    Map<Long, String> getAllUsers();
+    String deleteUser(User user);
+    List<UserDto>findAllUsers();
+    User findUserByName(String userName);
 }

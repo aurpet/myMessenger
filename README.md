@@ -1,9 +1,15 @@
 # myMessenger
 
+Database url:
+
+http://localhost:8080/h2
 
 Examples via postman 
+
 Create user
+
 http://localhost:8080/api/user/new-user
+
     {
         "userName": "testas",
         "password": "Testukas123"

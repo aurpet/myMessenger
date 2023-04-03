@@ -1,17 +1,13 @@
 package com.mymessenger.services;
 
-import com.mymessenger.model.Role;
+import com.mymessenger.dto.UserDto;
 import com.mymessenger.model.User;
 import com.mymessenger.repo.UserRepository;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import com.mymessenger.utils.Roles;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.Map;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -43,20 +39,31 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<Long, String> getAllUsers() {
-        return userRepository.findAll().stream().collect(Collectors.toMap(User::getId, User::getUserName));
+    public String deleteUser(User user) {
+        boolean isAdmin = user.getRoles().stream().anyMatch(v -> v.getRoleName().equals(Roles.ROLE_ADMIN.toString()));
+        if (isAdmin){
+            return "Admin account can't be deleted";
+        } else {
+            userRepository.delete(user);
+            return "User successfully deleted";
+        }
     }
 
     @Override
-    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        User user = userRepository.findByUserName(userName);
-        if (user == null){
-            throw new UsernameNotFoundException("Invalid username or password.");
-        }
-        return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
+    public List<UserDto> findAllUsers() {
+        List<UserDto> users = userRepository.findAll().stream()
+                .map(user ->  UserDto.builder()
+                        .id(user.getId())
+                        .userName(user.getUserName())
+                        .createdAd(user.getCreatedAt())
+                        .roles(user.getRoles().stream().map(e->e.getRoleName()).collect(Collectors.toList()))
+                        .build())
+                .collect(Collectors.toList());
+        return users;
     }
 
-    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles){
-        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getRoleName())).collect(Collectors.toList());
+    @Override
+    public User findUserByName(String userName) {
+        return userRepository.findByUserName(userName);
     }
 }
