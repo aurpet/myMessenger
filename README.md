@@ -1,7 +1,8 @@
 # myMessenger
 
-Create user
 
+Examples via postman 
+Create user
 http://localhost:8080/api/user/new-user
     {
         "userName": "testas",
