@@ -39,13 +39,9 @@ public class User extends BaseEntity {
                     name = "role_id", referencedColumnName = "id"))
     private Collection<Role> roles;
 
-
     public User(String userName, String password, Collection<Role> roles) {
         this.userName = userName;
         this.password = password;
         this.roles = roles;
     }
-
-
-
 }
