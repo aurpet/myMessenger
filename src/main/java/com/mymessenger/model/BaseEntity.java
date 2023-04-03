@@ -1,4 +1,4 @@
-package com.mymessenger.entities;
+package com.mymessenger.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,6 +26,6 @@ public class BaseEntity implements Serializable {
     private Long id;
 
     public boolean isNew(){
-        return this.id ==null;
+        return this.id == null;
     }
 }
