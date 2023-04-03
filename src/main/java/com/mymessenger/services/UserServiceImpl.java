@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -38,11 +39,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean userExist(String userName) {
         User user = userRepository.findByUserName(userName);
-        if (user == null) {
-            return false;
-        } else {
-            return true;
-        }
+        return user != null;
+    }
+
+    @Override
+    public Map<Long, String> getAllUsers() {
+        return userRepository.findAll().stream().collect(Collectors.toMap(User::getId, User::getUserName));
     }
 
     @Override
